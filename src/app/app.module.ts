@@ -7,7 +7,6 @@ import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { BookDetailsComponent } from './book-details/book-details.component';
 import { HttpClientModule } from '@angular/common/http';
-import { SingleBookDetailComponent } from './single-book-detail/single-book-detail.component';
 
 
 @NgModule({
@@ -15,7 +14,7 @@ import { SingleBookDetailComponent } from './single-book-detail/single-book-deta
     AppComponent,
     DashboardComponent,
     BookDetailsComponent,
-    SingleBookDetailComponent,
+    
     
   ],
   imports: [
