@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import "../css/BookDetails.css"
+import Table from './table';
 
 
 const Posts = (props) => {
 
     const [posts, setPosts] = useState([])
     const [toggle, setToggle] = useState(false)
-
+    const [count, setCount] = useState(0)
 
     useEffect(()=>{
         // main api call
@@ -33,16 +34,51 @@ const Posts = (props) => {
         })
     }
 
-    // const onSort = () => {
-    //     let tempArray = [...posts]
-    //     tempArray.sort()
-    //     setPosts(tempArray)
+    const onSort = (val) => {
+        let tempArray = [...posts]
+        if(val === 'id'){
+          tempArray.sort((a,b) => (a.id < b.id ? 1:-1));
+          setPosts(tempArray)
+          return;
+        }
+        else if(val=== 'title'){
+          tempArray.sort((a,b) => (a.title.toUpperCase() > b.title.toUpperCase() ? 1:-1));
+          setPosts(tempArray)
+          return ;
+        }
+        else{
+          tempArray.sort((a,b)=>(a.id>b.id ?1 :-1))
+          setPosts(tempArray)
+        }
         
-    // }
+        
+    }
 
     const onToggle = () => {
-        setToggle(!toggle)
+        let radioId = document.getElementById("id")
+        let radiotitle = document.getElementById("title")
+        if(toggle){
+          radioId.disabled = true
+          radioId.checked=false 
+          radiotitle.disabled =true
+          radiotitle.checked =false
+          onSort("idAsc")
+
+        }else{
+          radioId.disabled=false 
+          radiotitle.disabled= false
+        }setToggle(!toggle)
         
+    }
+
+    const handleRadio = (val) => {
+      let rd = document.getElementById(val);
+      console.log(rd.checked, count);
+      if(!rd.checked){
+        onSort("idAsc")
+      }else{
+        onSort(val)
+      }
     }
 
     
@@ -54,31 +90,12 @@ const Posts = (props) => {
             <button onClick={onToggle} style={{color: toggle? 'salmon' : 'brown' , marginLeft:"50%"}} className="">
                 Toggle
             </button>
+            <input type="checkbox"  id ="id"  disabled onChange={()=> handleRadio("id")}/>
+            <label >Sort on Id (Descending)</label>
+            <input type="checkbox"  id ="title"  disabled onChange={()=> handleRadio("title")}/>
+            <label>Sort on title (Ascending)</label>
             
-            <table style={{ marginTop: "2rem",border:"2rem"}}>
-        <tbody>
-          <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Body</th>
-            <th>Details</th>
-          </tr>
-          {toggle &&
-            posts.map((post) => (
-              <tr key={post.id}>
-                <td>{post.id}</td>
-                <td>{post.title}</td>
-                <td>{post.body}</td>
-
-                <td>
-                  <Link to={`/bookDetails/${post.id}`}>
-                    <button>Show Book</button>
-                  </Link>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+            <Table toggle={toggle} posts={posts}/>
         </div>
         
     )
